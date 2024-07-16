@@ -26,14 +26,15 @@ class ContentController extends Controller
     {
         $video = Video::find($videoId);
         $ratings = $video->ratings;
-    
+        dd($ratings);
+
     }
 
     // Lấy tất cả các bình luận của một người dùng cụ thể
     public function getUserComments($userId)
     {
         $comments = Comment::where('user_id', $userId)->get();
-        return response()->json($comments);
+        dd($comments);
     }
 
     // Lấy trung bình đánh giá của một bài viết cụ thể
@@ -41,7 +42,7 @@ class ContentController extends Controller
     {
         $article = Article::find($articleId);
         $averageRating = $article->ratings()->avg('rating');
-        return response()->json(['average_rating' => $averageRating]);
+        dd($averageRating);
     }
 
     // Lấy tất cả các bài viết, video, và hình ảnh được bình luận bởi một người dùng cụ thể
