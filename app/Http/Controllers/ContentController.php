@@ -49,26 +49,26 @@ class ContentController extends Controller
     public function getUserCommentedContent($userId)
     {
         $comments = Comment::where('user_id', $userId)->get();
-
+    
         $articles = $comments->filter(function ($comment) {
             return $comment->commentable_type == Article::class;
         })->pluck('commentable');
-
+    
         $videos = $comments->filter(function ($comment) {
             return $comment->commentable_type == Video::class;
         })->pluck('commentable');
-
+    
         $images = $comments->filter(function ($comment) {
             return $comment->commentable_type == Image::class;
         })->pluck('commentable');
-
-        return response()->json([
+    
+        dd([
             'articles' => $articles,
             'videos' => $videos,
             'images' => $images,
         ]);
     }
-
+    
     // Lấy danh sách các bài viết, video, và hình ảnh có đánh giá trung bình cao nhất
     public function getTopRatedContent()
     {
@@ -78,22 +78,22 @@ class ContentController extends Controller
                   ->orderBy('average_rating', 'desc')
                   ->take(5);
         }])->get();
-
+    
         $topRatedVideos = Video::with(['ratings' => function($query) {
             $query->select(DB::raw('rateable_id, AVG(rating) as average_rating'))
                   ->groupBy('rateable_id')
                   ->orderBy('average_rating', 'desc')
                   ->take(5);
         }])->get();
-
+    
         $topRatedImages = Image::with(['ratings' => function($query) {
             $query->select(DB::raw('rateable_id, AVG(rating) as average_rating'))
                   ->groupBy('rateable_id')
                   ->orderBy('average_rating', 'desc')
                   ->take(5);
         }])->get();
-
-        return response()->json([
+    
+        dd([
             'top_rated_articles' => $topRatedArticles,
             'top_rated_videos' => $topRatedVideos,
             'top_rated_images' => $topRatedImages,
