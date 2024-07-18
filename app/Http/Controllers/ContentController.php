@@ -54,6 +54,31 @@ class ContentController extends Controller
     // Lấy danh sách các bài viết, video, và hình ảnh có đánh giá trung bình cao nhất
     public function getTopRatedContent()
     {
-      
+      $topRatedArticles = Article::with(['ratings' => function ($query) {
+            $query->select(DB::raw('rateable_id, AVG(rating) as average_rating'))
+                ->groupBy('rateable_id')
+                ->orderBy('average_rating', 'desc')
+                ->take(5);
+        }])->get();
+
+        $topRatedVideos = Video::with(['ratings' => function ($query) {
+            $query->select(DB::raw('rateable_id, AVG(rating) as average_rating'))
+                ->groupBy('rateable_id')
+                ->orderBy('average_rating', 'desc')
+                ->take(5);
+        }])->get();
+
+        $topRatedImages = Image::with(['ratings' => function ($query) {
+            $query->select(DB::raw('rateable_id, AVG(rating) as average_rating'))
+                ->groupBy('rateable_id')
+                ->orderBy('average_rating', 'desc')
+                ->take(5);
+        }])->get();
+
+        dd([
+            'top_rated_articles' => $topRatedArticles,
+            'top_rated_videos' => $topRatedVideos,
+            'top_rated_images' => $topRatedImages,
+        ]);
     }
 }
